@@ -45,6 +45,12 @@ interface Product {
   image: string;
 }
 
-const { data: products } = await useFetch<Product[]>('https://fakestoreapi.com/products')
+const { data: products, error } = await useFetch('/api/products', {
+  timeout: 5000,
+  retry: 3,
+  onRequestError({ error }) {
+    console.error('API Error:', error)
+  }
+})
 const { data: categories } = await useFetch<string[]>('https://fakestoreapi.com/products/categories')
 </script> 

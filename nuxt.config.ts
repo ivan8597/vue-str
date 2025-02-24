@@ -49,7 +49,10 @@ export default defineNuxtConfig({
       '/api/**': { cors: true },
       'https://fakestoreapi.com/**': { 
         proxy: 'https://fakestoreapi.com/**',
-        cors: true
+        cors: true,
+        cache: {
+          maxAge: 60 * 60 * 24 // кеширование на 24 часа
+        }
       }
     }
   }

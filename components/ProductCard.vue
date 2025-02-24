@@ -73,7 +73,7 @@ const props = defineProps<{
 
 const cart = useCartStore()
 const showSnackbar = ref(false)
-const imageUrl = ref(props.product.image)
+const imageUrl = ref(props.product.image || '/images/placeholder.jpg')
 
 const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
