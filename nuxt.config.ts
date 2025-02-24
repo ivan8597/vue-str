@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxt/image',
+    '@vueuse/nuxt',
   ],
 
   css: ['vuetify/lib/styles/main.sass'],
