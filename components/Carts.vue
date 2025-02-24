@@ -8,7 +8,7 @@
         variant="text"
         size="small"
         prepend-icon="mdi-delete-sweep"
-        @click="clearCart"
+        @click="showClearConfirm = true"
       >
         Очистить корзину
       </v-btn>
@@ -186,6 +186,36 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Модальное окно подтверждения очистки корзины -->
+    <v-dialog v-model="showClearConfirm" max-width="400">
+      <v-card>
+        <v-card-title class="text-h5 pa-4">
+          Подтверждение очистки
+        </v-card-title>
+        
+        <v-card-text class="pa-4">
+          Вы уверены, что хотите очистить корзину?
+        </v-card-text>
+
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn
+            color="grey"
+            variant="text"
+            @click="showClearConfirm = false"
+          >
+            Отмена
+          </v-btn>
+          <v-btn
+            color="error"
+            @click="confirmClear"
+          >
+            Очистить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -203,6 +233,7 @@ const showForm = ref(false)
 const isFormValid = ref(false)
 const showSuccessDialog = ref(false)
 const orderSuccess = ref(false)
+const showClearConfirm = ref(false)
 
 const items = computed(() => cartStore.items)
 const totalPrice = computed(() => cartStore.totalPrice)
@@ -272,9 +303,12 @@ const closeSuccessDialog = () => {
 }
 
 const clearCart = () => {
-  if (confirm('Вы уверены, что хотите очистить корзину?')) {
-    cartStore.clearCart()
-  }
+  showClearConfirm.value = true
+}
+
+const confirmClear = () => {
+  cartStore.clearCart()
+  showClearConfirm.value = false
 }
 </script>
 

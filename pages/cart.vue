@@ -55,20 +55,34 @@
         </v-btn>
       </div>
     </template>
+
+    <v-alert
+      v-model="showSuccess"
+      type="success"
+      closable
+      class="mb-4"
+    >
+      Спасибо за покупку!
+    </v-alert>
   </v-container>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useCartStore } from '../store/cart'
 
 const cartStore = useCartStore()
+const showSuccess = ref(false)
 
 const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
 }
 
 const checkout = () => {
-  alert('Спасибо за покупку!')
+  showSuccess.value = true
   cartStore.clearCart()
+  setTimeout(() => {
+    showSuccess.value = false
+  }, 3000)
 }
 </script> 

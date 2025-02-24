@@ -42,5 +42,15 @@ export default defineNuxtConfig({
     public: {
      
     }
+  },
+
+  nitro: {
+    routeRules: {
+      '/api/**': { cors: true },
+      'https://fakestoreapi.com/**': { 
+        proxy: 'https://fakestoreapi.com/**',
+        cors: true
+      }
+    }
   }
 })

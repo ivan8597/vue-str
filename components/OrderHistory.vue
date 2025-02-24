@@ -102,6 +102,66 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Модальное окно подтверждения удаления заказа -->
+    <v-dialog v-model="showDeleteConfirm" max-width="400">
+      <v-card>
+        <v-card-title class="text-h5 pa-4">
+          Подтверждение удаления
+        </v-card-title>
+        
+        <v-card-text class="pa-4">
+          Вы уверены, что хотите удалить этот заказ?
+        </v-card-text>
+
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn
+            color="grey"
+            variant="text"
+            @click="cancelDelete"
+          >
+            Отмена
+          </v-btn>
+          <v-btn
+            color="error"
+            @click="confirmDelete"
+          >
+            Удалить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Модальное окно подтверждения очистки истории -->
+    <v-dialog v-model="showClearConfirm" max-width="400">
+      <v-card>
+        <v-card-title class="text-h5 pa-4">
+          Подтверждение очистки
+        </v-card-title>
+        
+        <v-card-text class="pa-4">
+          Вы уверены, что хотите очистить всю историю заказов?
+        </v-card-text>
+
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn
+            color="grey"
+            variant="text"
+            @click="showClearConfirm = false"
+          >
+            Отмена
+          </v-btn>
+          <v-btn
+            color="error"
+            @click="confirmClearAll"
+          >
+            Очистить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -127,6 +187,9 @@ interface Order {
 
 const dialog = ref(false)
 const orders = ref<Order[]>([])
+const showDeleteConfirm = ref(false)
+const orderToDelete = ref<string | null>(null)
+const showClearConfirm = ref(false)
 
 const loadOrders = () => {
   const savedOrders = localStorage.getItem('orders')
@@ -150,19 +213,34 @@ const formatPrice = (price: number) => {
 }
 
 const deleteOrder = (orderId: string) => {
-  if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
+  orderToDelete.value = orderId
+  showDeleteConfirm.value = true
+}
+
+const confirmDelete = () => {
+  if (orderToDelete.value) {
     const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]')
-    const updatedOrders = savedOrders.filter((order: any) => order.id !== orderId)
+    const updatedOrders = savedOrders.filter((order: any) => order.id !== orderToDelete.value)
     localStorage.setItem('orders', JSON.stringify(updatedOrders))
-    loadOrders() // Перезагружаем список заказов
+    loadOrders()
   }
+  showDeleteConfirm.value = false
+  orderToDelete.value = null
+}
+
+const cancelDelete = () => {
+  showDeleteConfirm.value = false
+  orderToDelete.value = null
 }
 
 const clearAllOrders = () => {
-  if (confirm('Вы уверены, что хотите очистить всю историю заказов?')) {
-    localStorage.setItem('orders', '[]')
-    orders.value = []
-  }
+  showClearConfirm.value = true
+}
+
+const confirmClearAll = () => {
+  localStorage.setItem('orders', '[]')
+  orders.value = []
+  showClearConfirm.value = false
 }
 
 // Загружаем заказы при открытии диалога

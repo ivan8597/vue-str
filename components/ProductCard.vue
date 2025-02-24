@@ -1,51 +1,67 @@
 <template>
   <v-card class="mx-auto" max-width="344">
-    <v-img :src="product.image" height="200px"></v-img>
+    <v-img
+      :src="imageUrl"
+      height="200"
+      :aspect-ratio="1"
+      class="bg-grey-lighten-2"
+      @error="handleImageError"
+    >
+      <template v-slot:placeholder>
+        <v-row
+          class="fill-height ma-0"
+          align="center"
+          justify="center"
+        >
+          <v-progress-circular
+            indeterminate
+            color="grey-lighten-5"
+          />
+        </v-row>
+      </template>
+    </v-img>
     
-    <v-card-title>{{ product.title }}</v-card-title>
+    <v-card-title class="text-truncate">
+      {{ product.title }}
+    </v-card-title>
     
     <v-card-text>
-      <div class="text-h6">
-        {{ formatPrice(product.price) }}
+      <div class="d-flex justify-space-between align-center">
+        <span class="text-h6">{{ formatPrice(product.price) }}</span>
+        <div>
+          <v-btn
+            color="primary"
+            variant="text"
+            @click="navigateToProduct"
+          >
+            Подробнее
+          </v-btn>
+          <v-btn
+            color="primary"
+            icon="mdi-cart"
+            @click="addToCart"
+          />
+        </div>
       </div>
     </v-card-text>
-    
-    <v-card-actions>
-      <v-btn
-        variant="text"
-        @click="navigateToProduct"
-      >
-        Подробнее
-      </v-btn>
-      <v-btn
-        variant="text"
-        @click="addToCart"
-      >
-        Добавить в корзину
-      </v-btn>
-    </v-card-actions>
 
-    <!-- Модальное окно -->
-    <v-dialog v-model="dialog" max-width="500">
-      <v-card>
-        <v-card-title class="headline">Товар добавлен в корзину</v-card-title>
-        <v-card-text>
-          {{ product.title }} добавлен в корзину!
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" variant="text" @click="dialog = false">Закрыть</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <!-- Снэкбар вместо модального окна -->
+    <v-snackbar
+      v-model="showSnackbar"
+      :timeout="2000"
+      color="success"
+    >
+      {{ product.title }} добавлен в корзину!
+    </v-snackbar>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ref } from 'vue'
 
+const router = useRouter()
 const props = defineProps<{
   product: {
     id: number
@@ -55,9 +71,9 @@ const props = defineProps<{
   }
 }>()
 
-const router = useRouter()
 const cart = useCartStore()
-const dialog = ref(false)
+const showSnackbar = ref(false)
+const imageUrl = ref(props.product.image)
 
 const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
@@ -65,10 +81,18 @@ const formatPrice = (price: number) => {
 
 const addToCart = () => {
   cart.addToCart(props.product)
-  dialog.value = true  // Открываем модальное окно
+  showSnackbar.value = true
 }
 
-const navigateToProduct = () => {
-  router.push(`/products/${props.product.id}`)
+const handleImageError = () => {
+  imageUrl.value = '/images/placeholder.jpg'
+}
+
+const navigateToProduct = async () => {
+  try {
+    await router.push(`/products/${props.product.id}`)
+  } catch (error) {
+    console.error('Navigation error:', error)
+  }
 }
 </script> 
