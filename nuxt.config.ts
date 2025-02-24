@@ -3,6 +3,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
+    '@nuxt/image',
   ],
 
   css: ['vuetify/lib/styles/main.sass'],
@@ -23,6 +24,15 @@ export default defineNuxtConfig({
           additionalData: '@use "sass:map";'
         }
       }
+    },
+    test: {
+      globals: true,
+      environment: 'happy-dom',
+      setupFiles: ['./tests/setup.ts'],
+      include: ['tests/**/*.test.ts'],
+      deps: {
+        inline: ['vuetify']
+      }
     }
   },
 
@@ -30,7 +40,7 @@ export default defineNuxtConfig({
     smtpUser: process.env.SMTP_USER,
     smtpPass: process.env.SMTP_PASS,
     public: {
-      // публичные переменные если нужны
+     
     }
   }
 })

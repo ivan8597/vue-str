@@ -10,8 +10,19 @@
 
     <v-dialog v-model="dialog" max-width="800px">
       <v-card>
-        <v-card-title class="text-h5">
+        <v-card-title class="text-h5 d-flex justify-space-between align-center">
           История заказов
+          <v-btn
+            v-if="orders.length"
+            color="error"
+            variant="text"
+            size="small"
+            prepend-icon="mdi-delete-sweep"
+            @click="clearAllOrders"
+            data-test="clear-all"
+          >
+            Очистить историю
+          </v-btn>
         </v-card-title>
 
         <v-card-text>
@@ -147,6 +158,13 @@ const deleteOrder = (orderId: string) => {
   }
 }
 
+const clearAllOrders = () => {
+  if (confirm('Вы уверены, что хотите очистить всю историю заказов?')) {
+    localStorage.setItem('orders', '[]')
+    orders.value = []
+  }
+}
+
 // Загружаем заказы при открытии диалога
 watch(dialog, (newValue) => {
   if (newValue) {
@@ -158,5 +176,9 @@ watch(dialog, (newValue) => {
 <style scoped>
 .v-card-text {
   padding-top: 20px;
+}
+
+.v-card-title {
+  padding: 16px !important;
 }
 </style> 

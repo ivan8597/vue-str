@@ -1,39 +1,41 @@
 <template>
-  <v-app-bar>
-    <v-container class="d-flex align-center">
-      <v-app-bar-title>
-        <nuxt-link to="/" class="text-decoration-none text-black">
-          Магазин
-        </nuxt-link>
-      </v-app-bar-title>
+  <div>
+    <!-- Основной хедер -->
+    <v-app-bar>
+      <v-container class="d-flex align-center">
+        <v-app-bar-title>
+          <nuxt-link to="/" class="text-decoration-none text-black">
+            Магазин
+          </nuxt-link>
+        </v-app-bar-title>
 
-      <v-spacer />
-
-      <div class="d-flex align-center">
-        <OrderHistory class="mr-4" />
+        <v-spacer />
         
-        <v-btn
-          :prepend-icon="'mdi-cart'"
-          color="primary"
-          variant="text"
-          @click="dialog = true"
-        >
-          Корзина
-          <v-badge
-            v-if="totalItems > 0"
-            :content="totalItems"
-            color="error"
-            floating
-          />
-        </v-btn>
-      </div>
-    </v-container>
+        <OrderHistory />
+      </v-container>
+    </v-app-bar>
+
+    <!-- Плавающая кнопка корзины -->
+    <v-btn
+      class="floating-cart-btn"
+      color="primary"
+      icon
+      @click="showCart"
+    >
+      <v-icon size="28">mdi-cart</v-icon>
+      <v-badge
+        v-if="totalItems > 0"
+        :content="totalItems"
+        color="error"
+        floating
+      />
+    </v-btn>
 
     <!-- Модальное окно корзины -->
-    <v-dialog v-model="dialog" max-width="700px">
-      <Carts @close="dialog = false" />
+    <v-dialog v-model="cartDialog" max-width="700">
+      <Carts @close="cartDialog = false" />
     </v-dialog>
-  </v-app-bar>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,7 +43,24 @@ import { ref, computed } from 'vue'
 import { useCartStore } from '../store/cart'
 import OrderHistory from './OrderHistory.vue'
 
-const dialog = ref(false)
 const cartStore = useCartStore()
+const cartDialog = ref(false)
 const totalItems = computed(() => cartStore.totalItems)
-</script> 
+
+const showCart = () => {
+  cartDialog.value = true
+}
+</script>
+
+<style scoped>
+.floating-cart-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+</style> 
