@@ -19,7 +19,8 @@
         <v-list-item
           v-for="item in items"
           :key="item.id"
-          class="mb-4"
+          class="mb-4 animate__animated animate__fadeInDown"
+          :class="{ 'animate__fadeOutLeft': isRemoving[item.id] }"
         >
           <v-card width="100%" variant="outlined">
             <v-card-text>
@@ -223,6 +224,10 @@
 import { useCartStore } from '../store/cart'
 import { computed, ref } from 'vue'
 
+interface RemovingState {
+  [key: number]: boolean
+}
+
 const cartStore = useCartStore()
 const form = ref({
   name: '',
@@ -234,6 +239,7 @@ const isFormValid = ref(false)
 const showSuccessDialog = ref(false)
 const orderSuccess = ref(false)
 const showClearConfirm = ref(false)
+const isRemoving = ref<RemovingState>({})
 
 const items = computed(() => cartStore.items)
 const totalPrice = computed(() => cartStore.totalPrice)
@@ -242,7 +248,9 @@ const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
 }
 
-const removeFromCart = (productId: number) => {
+const removeFromCart = async (productId: number) => {
+  isRemoving.value[productId] = true
+  await new Promise(resolve => setTimeout(resolve, 500))
   cartStore.removeFromCart(productId)
 }
 
@@ -328,6 +336,18 @@ const confirmClear = () => {
 
 .v-list-item {
   padding: 0;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .v-card-text {
@@ -341,5 +361,20 @@ const confirmClear = () => {
 .success {
   background-color: #E8F5E9 !important;
   color: #2E7D32 !important;
+}
+
+.v-list-item.removing {
+  animation: fadeOut 0.3s ease;
+}
+
+@keyframes fadeOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 }
 </style>

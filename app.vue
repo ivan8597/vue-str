@@ -2,7 +2,6 @@
   <div>
     <NuxtLayout>
       <NuxtPage />
-      <Carts />
     </NuxtLayout>
 
     <!-- Кнопка прокрутки вверх -->
@@ -37,7 +36,7 @@ const scrollToTop = () => {
 <style scoped>
 .scroll-to-top {
   position: fixed;
-  bottom: 24px;
+  bottom: 110px;
   right: 24px;
   z-index: 999;
   padding: 8px 16px;

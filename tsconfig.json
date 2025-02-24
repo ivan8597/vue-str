@@ -19,6 +19,13 @@
     "components/**/*.ts",
     "components/**/*.vue",
     "store/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "layouts/**/*.vue",
+    "pages/**/*.vue",
+    "plugins/**/*.ts",
+    "nuxt.config.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 } 

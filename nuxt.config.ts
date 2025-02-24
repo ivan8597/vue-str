@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
   ],
 
-  css: ['vuetify/lib/styles/main.sass'],
+  css: ['vuetify/lib/styles/main.sass', 'animate.css'],
 
   build: {
     transpile: ['vuetify'],
@@ -54,7 +54,24 @@ export default defineNuxtConfig({
         cache: {
           maxAge: 60 * 60 * 24 // кеширование на 24 часа
         }
+      },
+      '/api/images/**': {
+        proxy: 'https://fakestoreapi.com/img/**',
+        cors: true,
+        cache: {
+          maxAge: 60 * 60 * 24 * 7
+        }
       }
+    }
+  },
+
+  // @ts-ignore - игнорирование ошибки типа
+  image: {
+    provider: 'ipx',
+    domains: ['fakestoreapi.com'],
+    format: ['webp', 'jpg'],
+    cache: {
+      maxAge: 60 * 60 * 24 * 7
     }
   }
 })
