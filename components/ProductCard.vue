@@ -11,20 +11,40 @@
     </v-card-text>
     
     <v-card-actions>
-     
       <v-btn
         variant="text"
         @click="navigateToProduct"
       >
         Подробнее
       </v-btn>
+      <v-btn
+        variant="text"
+        @click="addToCart"
+      >
+        Добавить в корзину
+      </v-btn>
     </v-card-actions>
+
+    <!-- Модальное окно -->
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-card-title class="headline">Товар добавлен в корзину</v-card-title>
+        <v-card-text>
+          {{ product.title }} добавлен в корзину!
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" variant="text" @click="dialog = false">Закрыть</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import { useCartStore } from '~/store/cart'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const props = defineProps<{
   product: {
@@ -37,6 +57,7 @@ const props = defineProps<{
 
 const router = useRouter()
 const cart = useCartStore()
+const dialog = ref(false)
 
 const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
@@ -44,6 +65,7 @@ const formatPrice = (price: number) => {
 
 const addToCart = () => {
   cart.addToCart(props.product)
+  dialog.value = true  // Открываем модальное окно
 }
 
 const navigateToProduct = () => {

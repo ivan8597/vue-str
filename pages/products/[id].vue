@@ -35,6 +35,60 @@
         </v-btn>
       </v-col>
     </v-row>
+    
+    <!-- Добавьте модальное окно -->
+    <v-dialog v-model="dialog" max-width="450">
+      <v-card class="rounded-lg">
+        <v-card-title class="text-h5 pa-4 success lighten-4 text-success">
+          <v-icon icon="mdi-check-circle" class="mr-2" />
+          Товар добавлен в корзину
+        </v-card-title>
+        
+        <v-card-text class="pa-4">
+          <div class="d-flex align-center py-4">
+            <v-img
+              :src="product.image"
+              max-width="80"
+              contain
+              class="mr-4"
+            />
+            <div>
+              <div class="text-body-1 font-weight-medium mb-1">
+                {{ product.title }}
+              </div>
+              <div class="text-subtitle-1 text-primary">
+                {{ formatPrice(product.price) }}
+              </div>
+            </div>
+          </div>
+        </v-card-text>
+
+        <v-card-actions class="pa-4 pt-0">
+          <v-spacer />
+          <v-btn
+            color="grey"
+            variant="text"
+            size="small"
+            class="mr-2"
+            @click="dialog = false"
+          >
+            Назад
+          </v-btn>
+          <v-btn
+            color="primary"
+            size="small"
+            @click="goToCart"
+          >
+            В корзину
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Модальное окно корзины -->
+    <v-dialog v-model="cartDialog" max-width="700px">
+      <Carts @close="cartDialog = false" />
+    </v-dialog>
   </v-container>
 </template>
 
@@ -43,6 +97,8 @@
 import { useCartStore } from '../../store/cart'
 import { useRoute, useRouter } from 'vue-router'
 import { useFetch } from 'nuxt/app'
+import { ref } from 'vue'
+import Carts from '../../components/Carts.vue'
 
 interface Product {
   id: number;
@@ -63,15 +119,34 @@ const formatPrice = (price: number) => {
   return `${price.toFixed(2)} ₽`
 }
 
+const dialog = ref(false)
+const cartDialog = ref(false)
+
 const addToCart = () => {
   if (product.value) {
     // Добавление товара в корзину
     cartStore.addToCart(product.value)
-    alert(`${product.value.title} добавлен в корзину!`) // Уведомление пользователю
+    dialog.value = true
   }
 }
 
 const goToHome = () => {
   router.push('/')
 }
+
+const goToCart = () => {
+  dialog.value = false
+  cartDialog.value = true
+}
 </script>
+
+<style scoped>
+.v-card {
+  box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
+}
+
+.success {
+  background-color: #E8F5E9 !important;
+  color: #2E7D32 !important;
+}
+</style>

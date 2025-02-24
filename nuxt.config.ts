@@ -24,5 +24,13 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+
+  runtimeConfig: {
+    smtpUser: process.env.SMTP_USER,
+    smtpPass: process.env.SMTP_PASS,
+    public: {
+      // публичные переменные если нужны
+    }
   }
 })

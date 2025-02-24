@@ -152,7 +152,7 @@ const showCheckoutForm = () => {
   showForm.value = true
 }
 
-const submitOrder = () => {
+const submitOrder = async () => {
   const order = {
     id: Date.now().toString(),
     date: new Date().toISOString(),
@@ -164,6 +164,19 @@ const submitOrder = () => {
   const orders = JSON.parse(localStorage.getItem('orders') || '[]')
   orders.push(order)
   localStorage.setItem('orders', JSON.stringify(orders))
+  
+  // Отправляем уведомление на почту
+  try {
+    await fetch('/api/send-email', {
+      method: 'POST',
+      body: JSON.stringify({
+        order,
+        email: form.value.email
+      })
+    })
+  } catch (error) {
+    console.error('Error sending email notification:', error)
+  }
   
   cartStore.clearCart()
   showForm.value = false
