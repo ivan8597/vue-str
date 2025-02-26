@@ -5,19 +5,19 @@ import '../setup'
 
 describe('OrderHistory Component', () => {
   beforeEach(() => {
-    localStorage.clear()
+    localStorage.clear() //очищаем localStorage
   })
 
-  test('компонент монтируется', () => {
-    const wrapper = mount(OrderHistory)
-    expect(wrapper.exists()).toBe(true)
+  test('компонент монтируется', () => { //проверяем что компонент монтируется
+    const wrapper = mount(OrderHistory) //монтируем компонент
+    expect(wrapper.exists()).toBe(true) //проверяем что компонент существует
   })
 
-  test('кнопка "Мои заказы" отображается', () => {
-    const wrapper = mount(OrderHistory)
-    const button = wrapper.find('.v-btn')
-    expect(button.exists()).toBe(true)
-    expect(button.text()).toBe('Мои заказы')
+  test('кнопка "Мои заказы" отображается', () => { //проверяем что кнопка "Мои заказы" отображается
+    const wrapper = mount(OrderHistory) //монтируем компонент
+    const button = wrapper.find('.v-btn') //находим кнопку "Мои заказы"
+    expect(button.exists()).toBe(true) //проверяем что кнопка "Мои заказы" существует
+    expect(button.text()).toBe('Мои заказы') //проверяем что кнопка "Мои заказы" отображается
   })
 
  
