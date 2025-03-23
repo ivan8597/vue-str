@@ -1,13 +1,13 @@
 <template>
-  <v-card class="mx-auto product-card animate__animated animate__fadeIn">
-    <OptimizedImage :src="product.image" :alt="product.title" />
+  <v-card class="mx-auto product-card animate__animated animate__fadeIn d-flex flex-column" height="400">
+    <OptimizedImage :src="product.image" :alt="product.title" height="200" class="flex-grow-0" />
     
     <v-card-title class="text-truncate">
       {{ product.title }}
     </v-card-title>
     
-    <v-card-text>
-      <div class="d-flex justify-space-between align-center">
+    <v-card-text class="flex-grow-1 d-flex flex-column">
+      <div class="mt-auto d-flex justify-space-between align-center">
         <span class="text-h6">{{ formatPrice(product.price) }}</span>
         <div>
           <v-btn

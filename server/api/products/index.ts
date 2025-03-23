@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
     })
     if (!response.ok) throw new Error('API Error')
     return await response.json()
+  
   } catch (error) {
     console.warn('Using fallback products data')
     return fallbackProducts
